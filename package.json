@@ -53,6 +53,6 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix"
+    "*.js": "npm run lint"
   }
 }
