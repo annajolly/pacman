@@ -59,6 +59,7 @@ const Ghost = ({ gameOn, color, maxSize }) => {
   };
 
   const tick = () => {
+    console.log('tick');
     let newDirection = direction;
     // change direction randomly
     if (!isBlocked() && Math.random() > 0.9) {
