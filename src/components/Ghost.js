@@ -59,7 +59,6 @@ const Ghost = ({ gameOn, color, maxSize }) => {
   };
 
   const tick = () => {
-    console.log('tick');
     let newDirection = direction;
     // change direction randomly
     if (!isBlocked() && Math.random() > 0.9) {
@@ -71,10 +70,6 @@ const Ghost = ({ gameOn, color, maxSize }) => {
       newDirection === 'left' ? -10 : newDirection === 'right' ? 10 : 0;
     const deltaY =
       newDirection === 'down' ? 10 : newDirection === 'up' ? -10 : 0;
-
-    console.log(
-      left + deltaX < 0 ? maxSize : left + deltaX > maxSize ? 0 : left + deltaX,
-    );
 
     setLeft(
       left + deltaX < 0 ? maxSize : left + deltaX > maxSize ? 0 : left + deltaX,
