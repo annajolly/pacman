@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable max-len */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const StyledPacmanIcon = styled.svg.attrs(({ top, left }) => ({
@@ -42,113 +43,93 @@ const PacmanIcon = ({ color, direction, top, left }) => (
   </StyledPacmanIcon>
 );
 
-class Pacman extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      prevDirection: 'right',
-      direction: 'right',
-      top: 0,
-      left: 0,
-      ticking: false, // whether pacman is moving
-    };
-  }
-
-  componentDidUpdate() {
-    const { gameOn } = this.props;
-    const { ticking } = this.state;
-    if (gameOn && !ticking) {
-      // add keypress listener and start moving when play is clicked
-      document.addEventListener('keydown', this.handleKeyDown);
-      this.interval = setInterval(() => this.tick(), 100);
-      this.setState({ ticking: true });
-    } else if (!gameOn && ticking) {
-      // remove keypress listener and stop moving when stop is clicked
-      this.setState({ ticking: false });
-      document.removeEventListener('keydown', this.handleKeyDown);
-      clearInterval(this.interval);
-    }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-    clearInterval(this.interval);
-  }
+const Pacman = props => {
+  const { gameOn, maxSize, stepSize, setPosition } = props;
+  const [prevDirection, setPrevDirection] = useState('right');
+  const [direction, setDirection] = useState('right');
+  const [left, setLeft] = useState(0);
+  const [top, setTop] = useState(0);
 
   // listen for ArrowUp, ArrowDown, ArrowLeft, ArrowRight
-  handleKeyDown = event => {
+  const handleKeyDown = event => {
     const { key } = event;
 
     event.preventDefault();
 
     if (key === 'ArrowUp') {
-      this.setState(prevState => ({
-        prevDirection: prevState.direction,
-        direction: 'up',
-      }));
+      setPrevDirection(direction);
+      setDirection('up');
     } else if (key === 'ArrowDown') {
-      this.setState(prevState => ({
-        prevDirection: prevState.direction,
-        direction: 'down',
-      }));
+      setPrevDirection(direction);
+      setDirection('down');
     } else if (key === 'ArrowLeft') {
-      this.setState(prevState => ({
-        prevDirection: prevState.direction,
-        direction: 'left',
-      }));
+      setPrevDirection(direction);
+      setDirection('left');
     } else if (key === 'ArrowRight') {
-      this.setState(prevState => ({
-        prevDirection: prevState.direction,
-        direction: 'right',
-      }));
+      setPrevDirection(direction);
+      setDirection('right');
     }
   };
 
   // return true if pacman is not directly in an intersection and cannot yet move in a new direction
-  isBlocked() {
-    const { prevDirection, left, top } = this.state;
+  const isBlocked = () => {
     const isHorizontal = prevDirection === 'left' || prevDirection === 'right';
     return !(isHorizontal ? left % 20 === 0 : top % 20 === 0);
-  }
+  };
 
-  tick() {
-    const { prevDirection, direction } = this.state;
-    const { maxSize, stepSize } = this.props;
+  useEffect(() => {
+    const tick = () => {
+      const directionToUse = isBlocked() ? prevDirection : direction;
+      const deltaX =
+        directionToUse === 'left' ? -10 : directionToUse === 'right' ? 10 : 0;
+      const deltaY =
+        directionToUse === 'down' ? 10 : directionToUse === 'up' ? -10 : 0;
+      let newLeft;
+      let newTop;
 
-    const directionToUse = this.isBlocked() ? prevDirection : direction;
-    const deltaX =
-      directionToUse === 'left' ? -10 : directionToUse === 'right' ? 10 : 0;
-    const deltaY =
-      directionToUse === 'down' ? 10 : directionToUse === 'up' ? -10 : 0;
+      setLeft(l => {
+        newLeft =
+          l + deltaX < 0
+            ? maxSize - stepSize
+            : l + deltaX >= maxSize
+            ? 0
+            : l + deltaX;
+        return newLeft;
+      });
 
-    this.setState(prevState => ({
-      prevDirection: prevState.direction,
-      left:
-        prevState.left + deltaX < 0
-          ? maxSize - stepSize
-          : prevState.left + deltaX >= maxSize
-          ? 0
-          : prevState.left + deltaX,
-      top:
-        prevState.top + deltaY < 0
-          ? maxSize - stepSize
-          : prevState.top + deltaY >= maxSize
-          ? 0
-          : prevState.top + deltaY,
-    }));
-  }
+      setTop(t => {
+        newTop =
+          t + deltaY < 0
+            ? maxSize - stepSize
+            : t + deltaY >= maxSize
+            ? 0
+            : t + deltaY;
+        return newTop;
+      });
 
-  render() {
-    const { direction, top, left } = this.state;
-    return (
-      <PacmanIcon
-        direction={direction}
-        top={`${top}px`}
-        left={`${left}px`}
-        {...this.props}
-      />
-    );
-  }
-}
+      setPrevDirection(direction);
+      setPosition(newTop, newLeft);
+    };
+
+    // add keypress listener and start moving when play is clicked
+    document.addEventListener('keydown', handleKeyDown);
+    const interval = setInterval(() => {
+      if (gameOn) tick();
+    }, 100);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      clearInterval(interval);
+    };
+  }, [gameOn, direction]);
+
+  return (
+    <PacmanIcon
+      direction={direction}
+      top={`${top}px`}
+      left={`${left}px`}
+      {...props}
+    />
+  );
+};
 
 export default Pacman;
