@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
+import { Context as PacmanContext } from '../context/PacmanContext';
 import Pacman from './ClassPacman';
 import PacDot from './PacDot';
 import Ghost from './Ghost';
@@ -8,8 +9,8 @@ import Food from './Food';
 const StyledPacmanContainer = styled.div`
   position: relative;
   background-color: black;
-  height: 600px;
-  width: 600px;
+  height: 520px;
+  width: 520px;
 `;
 
 const StyledPacDots = styled.div`
@@ -31,7 +32,7 @@ const StyledPellet = styled.span.attrs(({ left, top }) => ({
   position: absolute;
 `;
 
-const MAX_SIZE = 600;
+const MAX_SIZE = 520;
 const STEP_SIZE = 20;
 const NUM_DOTS = MAX_SIZE / STEP_SIZE;
 
@@ -45,98 +46,93 @@ const PacDotRow = ({ y }) => (
 );
 
 const getRandomDotPosition = () =>
-  Math.round(Math.floor(Math.random() * 30)) * 20;
+  Math.round(Math.floor(Math.random() * (MAX_SIZE / STEP_SIZE))) * STEP_SIZE;
 
-class PacmanContainer extends Component {
-  ghosts = ['pink', 'orange', 'red', 'cyan'];
+const ghosts = ['pink', 'orange', 'red', 'cyan'];
 
-  foods = [
-    { top: 20, left: 20 },
-    { top: 560, left: 20 },
-    { top: 20, left: 560 },
-    { top: 560, left: 560 },
-  ];
+const foods = [
+  { top: 20, left: 20 },
+  { top: 560, left: 20 },
+  { top: 20, left: 480 },
+  { top: 560, left: 480 },
+];
 
-  pellets = [...Array(8)].map((_, i) => ({
-    key: i,
-    left: getRandomDotPosition(),
-    top: getRandomDotPosition(),
-  }));
+const pellets = [...Array(8)].map((_, i) => ({
+  key: i,
+  left: getRandomDotPosition(),
+  top: getRandomDotPosition(),
+}));
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      pacmanColor: 'yellow',
-      pacmanTop: 0,
-      pacmanLeft: 0,
-      huntMode: false,
-    };
-  }
+const PacmanContainer = ({ gameOn, setGameWon, setGameLost, setScore }) => {
+  const {
+    state: {
+      position: { left: pacmanLeft, top: pacmanTop },
+      huntMode,
+    },
+    setLeft,
+    setTop,
+    setHuntMode,
+  } = useContext(PacmanContext);
+  const [pacmanColor, setPacmanColor] = useState('yellow');
 
-  didEatPellet = (pacmanLeft, pacmanTop) => {
+  const didEatPellet = (newLeft, newTop) => {
     // check if pacman is touching any of the foods
-    const isTouchingFood = this.pellets.filter(
+    const isTouchingFood = pellets.filter(
       ({ top, left }) =>
-        Math.abs(pacmanLeft - left) <= 10 && Math.abs(pacmanTop - top) <= 10,
+        Math.abs(newLeft - left) <= 10 && Math.abs(newTop - top) <= 10,
     ).length;
     if (isTouchingFood) {
-      this.setState({ huntMode: true });
-      setTimeout(() => this.setState({ huntMode: false }), 15000);
+      setHuntMode(true);
+      setTimeout(() => setHuntMode(false), 15000);
     }
   };
 
-  isCollision = (ghostLeft, ghostTop) => {
-    const { pacmanLeft, pacmanTop } = this.state;
+  const isCollision = (ghostLeft, ghostTop) =>
     // check if pacman is touching any of the ghosts
-    return (
-      Math.abs(pacmanLeft - ghostLeft) <= 10 &&
-      Math.abs(pacmanTop - ghostTop) <= 10
-    );
+    Math.abs(pacmanLeft - ghostLeft) <= 10 &&
+    Math.abs(pacmanTop - ghostTop) <= 10;
+
+  const setPacmanPosition = (left, top) => {
+    setLeft(left);
+    setTop(top);
   };
 
-  setPacmanPosition = (left, top) =>
-    this.setState({ pacmanLeft: left, pacmanTop: top });
-
-  render() {
-    const { pacmanColor, huntMode } = this.state;
-    const { gameOn, setGameWon, setGameLost, setScore } = this.props;
-    return (
-      <StyledPacmanContainer>
-        <Pacman
+  return (
+    <StyledPacmanContainer>
+      <Pacman
+        gameOn={gameOn}
+        color={pacmanColor}
+        maxSize={MAX_SIZE}
+        stepSize={STEP_SIZE}
+        setPosition={setPacmanPosition}
+        checkIfAteFood={didEatPellet}
+      />
+      {ghosts.map(ghostColor => (
+        <Ghost
+          key={ghostColor}
           gameOn={gameOn}
-          color={pacmanColor}
+          color={huntMode ? 'blue' : ghostColor}
           maxSize={MAX_SIZE}
           stepSize={STEP_SIZE}
-          setPosition={this.setPacmanPosition}
-          checkIfAteFood={this.didEatPellet}
+          isCollision={isCollision}
+          endGame={setGameLost}
+          huntMode={huntMode}
+          setScore={setScore}
         />
-        {this.ghosts.map(ghostColor => (
-          <Ghost
-            key={ghostColor}
-            gameOn={gameOn}
-            color={huntMode ? 'blue' : ghostColor}
-            maxSize={MAX_SIZE}
-            stepSize={STEP_SIZE}
-            isCollision={this.isCollision}
-            endGame={setGameLost}
-            huntMode={huntMode}
-            setScore={setScore}
-          />
+      ))}
+      {pellets.map(({ key, left, top }) => (
+        <StyledPellet key={key} left={left} top={top}>
+          <PacDot color="pink" height="40" />
+        </StyledPellet>
+      ))}
+      <StyledPacDots>
+        {[...Array(NUM_DOTS)].map((_, y) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <PacDotRow key={y} y={y} />
         ))}
-        {this.pellets.map(({ key, left, top }) => (
-          <StyledPellet key={key} left={left} top={top}>
-            <PacDot color="pink" height="40" />
-          </StyledPellet>
-        ))}
-        <StyledPacDots>
-          {[...Array(NUM_DOTS)].map((_, y) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <PacDotRow key={y} y={y} />
-          ))}
-        </StyledPacDots>
-      </StyledPacmanContainer>
-    );
-  }
-}
+      </StyledPacDots>
+    </StyledPacmanContainer>
+  );
+};
 
 export default PacmanContainer;

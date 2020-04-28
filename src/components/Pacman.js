@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import { Context as PacmanContext } from '../context/PacmanContext';
 
 const StyledPacmanIcon = styled.svg.attrs(({ top, left }) => ({
   style: {
@@ -44,11 +45,16 @@ const PacmanIcon = ({ color, direction, top, left }) => (
 );
 
 const Pacman = props => {
+  const {
+    state: {
+      position: { left, top },
+    },
+    setLeft,
+    setTop,
+  } = useContext(PacmanContext);
   const { gameOn, maxSize, stepSize, setPosition } = props;
   const [prevDirection, setPrevDirection] = useState('right');
   const [direction, setDirection] = useState('right');
-  const [left, setLeft] = useState(0);
-  const [top, setTop] = useState(0);
 
   // listen for ArrowUp, ArrowDown, ArrowLeft, ArrowRight
   const handleKeyDown = event => {

@@ -31,6 +31,10 @@ const StyledButton = styled.button`
   width: 120px;
   margin: 12px;
   margin-bottom: 24px;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const StyledScore = styled.span`
