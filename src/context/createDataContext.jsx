@@ -8,11 +8,9 @@ const createDataContext = (reducer, actions, initialState) => {
 
     const boundActions = {};
 
-    for (const key in actions) {
-      if ({}.hasOwnProperty.call(actions, key)) {
-        boundActions[key] = actions[key](dispatch);
-      }
-    }
+    Object.keys(actions).forEach(key => {
+      boundActions[key] = actions[key](dispatch);
+    });
 
     return (
       <Context.Provider value={{ state, ...boundActions }}>
