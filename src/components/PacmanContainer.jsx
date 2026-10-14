@@ -39,7 +39,6 @@ const NUM_DOTS = MAX_SIZE / STEP_SIZE;
 const PacDotRow = ({ y }) => (
   <StyledRow>
     {[...Array(NUM_DOTS)].map((_, x) => (
-      // eslint-disable-next-line react/no-array-index-key
       <PacDot key={`${x},${y}`} color="pink" height="20" />
     ))}
   </StyledRow>
@@ -127,7 +126,6 @@ const PacmanContainer = ({ gameOn, setGameWon, setGameLost, setScore }) => {
       ))}
       <StyledPacDots>
         {[...Array(NUM_DOTS)].map((_, y) => (
-          // eslint-disable-next-line react/no-array-index-key
           <PacDotRow key={y} y={y} />
         ))}
       </StyledPacDots>
