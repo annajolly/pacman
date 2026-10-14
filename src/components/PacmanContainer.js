@@ -23,10 +23,10 @@ const StyledRow = styled.div`
   height: 20px;
 `;
 
-const StyledPellet = styled.span.attrs(({ left, top }) => ({
+const StyledPellet = styled.span.attrs(({ $left, $top }) => ({
   style: {
-    left: left - 10,
-    top: top - 10,
+    left: $left - 10,
+    top: $top - 10,
   },
 }))`
   position: absolute;
@@ -121,7 +121,7 @@ const PacmanContainer = ({ gameOn, setGameWon, setGameLost, setScore }) => {
         />
       ))}
       {pellets.map(({ key, left, top }) => (
-        <StyledPellet key={key} left={left} top={top}>
+        <StyledPellet key={key} $left={left} $top={top}>
           <PacDot color="pink" height="40" />
         </StyledPellet>
       ))}

@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const StyledIcon = styled.svg.attrs(({ left, top }) => ({
+const StyledIcon = styled.svg.attrs(({ $left, $top }) => ({
   style: {
-    left,
-    top,
+    left: $left,
+    top: $top,
   },
 }))`
   position: absolute;
@@ -16,8 +16,8 @@ const GhostIcon = ({ color, left, top }) => (
     height="20"
     viewBox="0 0 34 34"
     fill={color}
-    left={left}
-    top={top}
+    $left={left}
+    $top={top}
   >
     <path d="M6.97 32.99c2.51 0 2.51-2 5.02-2 2.5 0 2.5 2 5.01 2 2.5 0 2.5-2 5.01-2s2.51 2 5.02 2c2.42 0 2.5-1.87 4.77-2 .13 0 .24-.11.24-.24V16.04C32.02 7.737 25.317 1.01 17 1.01c-8.31 0-15.04 6.73-15.04 15.04v14.7c0 .13.11.24.25.24 2.26.13 2.34 2 4.76 2zM22.98 9.98c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zM11 9.98c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z" />
   </StyledIcon>
@@ -28,8 +28,8 @@ const EyesIcon = ({ left, top }) => (
     height="40"
     fill="#FFF"
     viewBox="0 0 100 100"
-    left={left}
-    top={top}
+    $left={left}
+    $top={top}
   >
     <g fill="none" fillRule="evenodd">
       <circle stroke="#FFF" strokeWidth="2" cx="72.5" cy="40" r="10.5" />
@@ -89,8 +89,8 @@ const Ghost = ({
           l + deltaX < 0
             ? maxSize - stepSize
             : l + deltaX >= maxSize - stepSize
-            ? 0
-            : l + deltaX;
+              ? 0
+              : l + deltaX;
         return newLeft;
       });
 
@@ -99,8 +99,8 @@ const Ghost = ({
           t + deltaY < 0
             ? maxSize - stepSize
             : t + deltaY >= maxSize - stepSize
-            ? 0
-            : t + deltaY;
+              ? 0
+              : t + deltaY;
         return newTop;
       });
 

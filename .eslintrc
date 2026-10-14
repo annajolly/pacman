@@ -3,8 +3,7 @@
     "airbnb",
     "react-app",
     "plugin:jsx-a11y/recommended",
-    "prettier",
-    "prettier/react"
+    "prettier"
   ],
   "plugins": ["jsx-a11y", "prettier"],
   "rules": {
@@ -28,6 +27,8 @@
     "no-nested-ternary": "off",
     "react/jsx-props-no-spreading": "off",
     "react-hooks/exhaustive-deps": "off",
-    "arrow-body-style": ["error", "as-needed"]
+    "arrow-body-style": ["error", "as-needed"],
+    "react/function-component-definition": "off",
+    "react/jsx-no-constructed-context-values": "off"
   }
 }

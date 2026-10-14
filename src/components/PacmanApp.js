@@ -18,8 +18,15 @@ const StyledHeader = styled.div`
   font-size: 48px;
   color: blue;
   padding: 12px;
-  text-shadow: -4px 0 yellow, 0 4px yellow, 4px 0 yellow, 0 -4px yellow,
-    -4px -4px yellow, 4px 4px yellow, -4px 4px yellow, 4px -4px yellow;
+  text-shadow:
+    -4px 0 yellow,
+    0 4px yellow,
+    4px 0 yellow,
+    0 -4px yellow,
+    -4px -4px yellow,
+    4px 4px yellow,
+    -4px 4px yellow,
+    4px -4px yellow;
   text-align: center;
 `;
 
@@ -48,8 +55,15 @@ const StyledTitle = styled.div`
   font-weight: 600;
   font-size: 48px;
   color: yellow;
-  text-shadow: -4px 0 blue, 0 4px blue, 4px 0 blue, 0 -4px blue, -4px -4px blue,
-    -4px 4px blue, 4px 4px blue, 4px -4px blue;
+  text-shadow:
+    -4px 0 blue,
+    0 4px blue,
+    4px 0 blue,
+    0 -4px blue,
+    -4px -4px blue,
+    -4px 4px blue,
+    4px 4px blue,
+    4px -4px blue;
   z-index: 1;
 `;
 
