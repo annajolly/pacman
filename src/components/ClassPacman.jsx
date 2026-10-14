@@ -51,11 +51,9 @@ class Pacman extends Component {
       // add keypress listener and start moving when play is clicked
       document.addEventListener('keydown', this.handleKeyDown);
       this.interval = setInterval(() => this.tick(), 100);
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ ticking: true });
     } else if (!gameOn && ticking) {
       // remove keypress listener and stop moving when stop is clicked
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ ticking: false });
       document.removeEventListener('keydown', this.handleKeyDown);
       clearInterval(this.interval);
