@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^10.4.2",
-    "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "styled-components": "^6.6.0"
@@ -22,6 +18,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
@@ -37,10 +37,14 @@
     "prettier": "^3.9.10",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
-    "vitest": "^5.0.4"
+    "vitest": "^5.0.5"
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": "eslint"
   },
-  "type": "module"
+  "type": "module",
+  "allowScripts": {
+    "fsevents": false,
+    "unrs-resolver": false
+  }
 }
